@@ -184,6 +184,89 @@
     }
   });
 
+___________________________________________________________
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const app = express();
+
+app.use(bodyParser.json());
+app.use(cors());
+
+mongoose.connect('mongodb://localhost:27017/testimonials', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const testimonialSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  testimonial: String,
+});
+
+const Testimonial = mongoose.model('Testimonial', testimonialSchema);
+
+app.post('/submit', async (req, res) => {
+  const { name, email, testimonial } = req.body;
+  const newTestimonial = new Testimonial({ name, email, testimonial });
+  await newTestimonial.save();
+  res.send('Testimonial submitted successfully!');
+});
+
+app.get('/testimonials', async (req, res) => {
+  const testimonials = await Testimonial.find({});
+  res.json(testimonials);
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+
+document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const testimonial = document.getElementById('testimonial').value;
+
+  const response = await fetch('http://localhost:3000/submit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name, email, testimonial }),
+  });
+
+  const data = await response.text();
+  alert(data);
+
+  loadTestimonials();
+});
+
+async function loadTestimonials() {
+  const response = await fetch('http://localhost:3000/testimonials');
+  const testimonials = await response.json();
+
+  const container = document.querySelector('.testimonials');
+  container.innerHTML = '';
+
+  testimonials.forEach((testimonial) => {
+    const template = document.getElementById('testimonial-template');
+    const clone = template.cloneNode(true);
+    clone.style.display = 'block';
+    clone.querySelector('.testimonial-text').textContent = testimonial.testimonial;
+    clone.querySelector('.testimonial-name').textContent = testimonial.name;
+    clone.querySelector('.testimonial-email').textContent = testimonial.email;
+    container.appendChild(clone);
+  });
+}
+
+loadTestimonials();
+
+__________________________________________________________________________
+
   /**
    * Porfolio isotope and filter
    */
