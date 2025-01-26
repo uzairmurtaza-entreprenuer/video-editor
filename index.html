@@ -471,7 +471,18 @@
 
 _________________________________________________________________________________________
 
-<div class="container section-title" data-aos="fade-up">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testimonials</title>
+  <!-- Add Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js"></script>
+</head>
+<body>
+  <div class="container section-title" data-aos="fade-up">
     <h2 class="center-text">Testimonials</h2>
     <hr class="line">
   </div>
@@ -479,12 +490,12 @@ ________________________________________________________________________________
   <div class="container">
     <form id="feedbackForm">
       <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" name="name" required>
+        <label for="name1" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name1" name="name" required>
       </div>
       <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" required>
+        <label for="email1" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email1" name="email" required>
       </div>
       <div class="mb-3">
         <label for="testimonial" class="form-label">Testimonial</label>
@@ -503,8 +514,6 @@ ________________________________________________________________________________
   </div>
 
   <!-- Add the Firebase configuration and SDK scripts -->
-  <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js"></script>
   <script>
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -523,8 +532,8 @@ ________________________________________________________________________________
     document.getElementById('feedbackForm').addEventListener('submit', function(event) {
       event.preventDefault();
 
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
+      const name = document.getElementById('name1').value;
+      const email = document.getElementById('email1').value;
       const testimonial = document.getElementById('testimonial').value;
 
       db.collection('testimonials').add({
@@ -562,7 +571,8 @@ ________________________________________________________________________________
 
     window.onload = loadTestimonials;
   </script>
-
+</body>
+</html>
 _________________________________________________________________________________________________
 
   <!-- ======= Services Section ======= -->
