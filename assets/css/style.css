@@ -629,6 +629,61 @@ section .container {
   background-color: #18d26e;
 }
 
+_________________________________________________________________________________________
+
+.center-text {
+  text-align: center;
+  width: 100%; /* Ensures the text spans the full width */
+}
+
+.section-title .line {
+  width: 100px;
+  height: 4px;
+  background-color: #3498db;
+  margin: 0 auto; /* Centers the line */
+}
+
+.testimonials {
+  margin-top: 20px;
+}
+
+.testimonial-item {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.testimonial-text {
+  font-size: 16px;
+  color: #333;
+}
+
+.testimonial-name {
+  font-weight: bold;
+  color: #000;
+}
+
+.testimonial-email {
+  font-size: 12px;
+  color: #777;
+}
+
+#feedbackForm {
+  margin-top: 30px;
+}
+
+#feedbackForm .form-label {
+  font-weight: bold;
+}
+
+#feedbackForm .btn-primary {
+  background-color: #3498db;
+  border-color: #3498db;
+}
+
+_____________________________________________________________________________________________________________
+
 /*--------------------------------------------------------------
 # Resume
 --------------------------------------------------------------*/
