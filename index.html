@@ -472,58 +472,97 @@
 _________________________________________________________________________________________
 
 <div class="container section-title" data-aos="fade-up">
-  <h2 class="center-text">Testimonials</h2>
-  <hr class="line">
-</div>
-
-<div class="container">
-  <form id="feedbackForm">
-    <div class="mb-3">
-      <label for="name" class="form-label">Name</label>
-      <input type="text" class="form-control" id="name" name="name" required>
-    </div>
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" required>
-    </div>
-    <div class="mb-3">
-      <label for="testimonial" class="form-label">Testimonial</label>
-      <textarea class="form-control" id="testimonial" name="testimonial" rows="3" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-</div>
-
-<div class="container testimonials">
-  <div class="testimonial-item" id="testimonial-template" style="display: none;">
-    <p class="testimonial-text"></p>
-    <p class="testimonial-name"></p>
-    <p class="testimonial-email"></p>
+    <h2 class="center-text">Testimonials</h2>
+    <hr class="line">
   </div>
-</div>
 
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-<!-- Add Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js"></script>
+  <div class="container">
+    <form id="feedbackForm">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="testimonial" class="form-label">Testimonial</label>
+        <textarea class="form-control" id="testimonial" name="testimonial" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCXY4qyGSW9mrUqmfK3qoZMQFh1afiW0tQ",
-    authDomain: "testimonialfeedbackapp.firebaseapp.com",
-    projectId: "testimonialfeedbackapp",
-    storageBucket: "testimonialfeedbackapp.firebasestorage.app",
-    messagingSenderId: "811917907655",
-    appId: "1:811917907655:web:9c160ba9a61a62e22190e2"
-  };
+  <div class="container testimonials">
+    <div class="testimonial-item" id="testimonial-template" style="display: none;">
+      <p class="testimonial-text"></p>
+      <p class="testimonial-name"></p>
+      <p class="testimonial-email"></p>
+    </div>
+  </div>
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
+  <!-- Add the Firebase configuration and SDK scripts -->
+  <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js"></script>
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXY4qyGSW9mrUqmfK3qoZMQFh1afiW0tQ",
+      authDomain: "testimonialfeedbackapp.firebaseapp.com",
+      projectId: "testimonialfeedbackapp",
+      storageBucket: "testimonialfeedbackapp.appspot.com",
+      messagingSenderId: "811917907655",
+      appId: "1:811917907655:web:9c160ba9a61a62e22190e2"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const testimonial = document.getElementById('testimonial').value;
+
+      db.collection('testimonials').add({
+        name: name,
+        email: email,
+        testimonial: testimonial,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        alert('Feedback submitted successfully!');
+        document.getElementById('feedbackForm').reset();
+        loadTestimonials(); // Refresh testimonials after submission
+      })
+      .catch((error) => {
+        console.error('Error writing document: ', error);
+      });
+    });
+
+    async function loadTestimonials() {
+      const testimonialsContainer = document.querySelector('.testimonials');
+      testimonialsContainer.innerHTML = '';
+
+      const snapshot = await db.collection('testimonials').orderBy('timestamp', 'desc').get();
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const template = document.getElementById('testimonial-template');
+        const clone = template.cloneNode(true);
+        clone.style.display = 'block';
+        clone.querySelector('.testimonial-text').textContent = data.testimonial;
+        clone.querySelector('.testimonial-name').textContent = data.name;
+        clone.querySelector('.testimonial-email').textContent = data.email;
+        testimonialsContainer.appendChild(clone);
+      });
+    }
+
+    window.onload = loadTestimonials;
+  </script>
+
 _________________________________________________________________________________________________
 
   <!-- ======= Services Section ======= -->
