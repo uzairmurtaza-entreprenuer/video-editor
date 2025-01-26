@@ -285,6 +285,51 @@ document.getElementById('feedbackForm').addEventListener('submit', function(even
     });
 });
 
+___________________________________________________________________
+
+document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const testimonial = document.getElementById('testimonial').value;
+
+  db.collection('testimonials').add({
+    name: name,
+    email: email,
+    testimonial: testimonial,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    alert('Feedback submitted successfully!');
+    document.getElementById('feedbackForm').reset();
+    loadTestimonials(); // Refresh testimonials after submission
+  })
+  .catch((error) => {
+    console.error('Error writing document: ', error);
+  });
+});
+
+async function loadTestimonials() {
+  const testimonialsContainer = document.querySelector('.testimonials');
+  testimonialsContainer.innerHTML = '';
+
+  const snapshot = await db.collection('testimonials').orderBy('timestamp', 'desc').get();
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const template = document.getElementById('testimonial-template');
+    const clone = template.cloneNode(true);
+    clone.style.display = 'block';
+    clone.querySelector('.testimonial-text').textContent = data.testimonial;
+    clone.querySelector('.testimonial-name').textContent = data.name;
+    clone.querySelector('.testimonial-email').textContent = data.email;
+    testimonialsContainer.appendChild(clone);
+  });
+}
+
+window.onload = loadTestimonials;
+
+
 
 __________________________________________________________________________
 
